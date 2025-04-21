@@ -38,7 +38,7 @@ const countdownStatus = computed(() => {
   const diff = due.diff(now, 'hour')
 
   if (diff < 0) return 'overdue'
-  if (diff < 24) return 'soon'
+  if (diff <= 24) return 'soon'
   return 'safe'
 })
 
