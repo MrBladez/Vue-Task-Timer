@@ -1,52 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vue Task Manager</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/flipclock/dist/flipclock.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock/dist/flipclock.css">
-
-</head>
-<body>
-  <div id="app">
-    <h1>📝 My Tasks</h1>
-
-    <form @submit.prevent="addTask">
-      <input v-model="newTask" type="text" placeholder="Enter a task" required />
-      <input v-model="newDueDate" type="datetime-local" required />
-      <button type="submit">Add Task</button>
-    </form>
-
-    <button @click="toggleView">
-      Switch to {{ useFlipClock ? 'Text View' : 'FlipClock' }}
-    </button>
-
-    <ul>
-      <li v-for="(task, index) in tasks" :key="task.id">
-        <span v-if="!task.editing" @click="enableEdit(task)">
-          {{ task.name }}
-        </span>
-        <input v-else v-model="task.name" @blur="disableEdit(task)" @keyup.enter="disableEdit(task)" />
-
-        <div v-if="!useFlipClock" class="due-date-label">
-          📅 Due: {{ formatDate(task.dueDate) }}
-        </div>
-        <div v-if="!useFlipClock" class="countdown">
-          ⏳ {{ countdown(task.dueDate) }}
-        </div>
-
-        <div v-else class="flip-clock" :id="'clock-' + task.id"></div>
-
-        <button class="remove-btn" @click="removeTask(index)">❌</button>
-      </li>
-    </ul>
-  </div>
-
-  <script src="app.js" type="module"></script>
-</body>
+  <head>
+    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.min.js"></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Task App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
