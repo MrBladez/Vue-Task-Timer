@@ -1,54 +1,63 @@
+:root {
+  --bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --primary: #2c3e50;
+  --accent: #1abc9c;
+  --danger: #e74c3c;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --radius: 12px;
+}
+
 body {
-  font-family: Inter, sans-serif;
-  background: #f4f4f8;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   margin: 0;
-  padding: 2rem;
-  color: #333;
+  padding: 1rem;
+  background: var(--bg);
+  color: var(--primary);
 }
 
 main {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
 }
 
 form {
   display: flex;
-  gap: 0.5rem;
   flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-input {
-  flex: 1;
-  padding: 0.5rem 1rem;
+form input,
+form select,
+form button {
+  flex: 1 1 100%;
+  padding: 0.75rem;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: var(--radius);
+  box-sizing: border-box;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  background: #2c3e50;
+form button {
+  background-color: var(--primary);
   color: white;
-  font-size: 1rem;
-  border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
-button:hover {
-  background: #1a242f;
+form button:hover {
+  background-color: var(--accent);
 }
 
 ul {
@@ -57,23 +66,84 @@ ul {
 }
 
 li {
-  background: #f9f9fb;
+  background: var(--card-bg);
   border: 1px solid #e1e1e8;
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 1rem;
   margin-bottom: 1rem;
+  box-shadow: var(--shadow);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 0.5rem;
 }
 
+li span,
 li input {
-  flex: 1;
+  flex: 1 1 60%;
+  font-size: 1rem;
+  word-wrap: break-word;
 }
 
-li div {
+li button {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+li button:hover {
+  background: #c0392b;
+}
+
+/* Countdown styles */
+.countdown-box {
   font-size: 0.85rem;
-  color: #666;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  margin-top: 0.3rem;
+}
+
+.countdown-box.safe {
+  background: #e4f8ec;
+  color: #2e7d32;
+}
+
+.countdown-box.soon {
+  background: #fff6e1;
+  color: #b97800;
+}
+
+.countdown-box.overdue {
+  background: #ffe3e3;
+  color: #c0392b;
+}
+@media (min-width: 600px) {
+  form input,
+  form select {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
+
+  form button {
+    flex: 1 1 100%;
+  }
+
+  li {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  li span,
+  li input {
+    flex: 1;
+  }
+
+  .countdown-box {
+    margin-left: auto;
+    text-align: right;
+  }
 }
