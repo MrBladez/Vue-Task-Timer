@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.13",
+    "firebase": "^11.6.0",
     "vite-plugin-pwa": "^1.0.0",
     "vue": "^3.4.0",
     "vue3-flip-countdown": "^0.1.6"

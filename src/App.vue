@@ -2,6 +2,7 @@
   <main>
     <h1>📝 My Tasks</h1>
     <TaskForm @add-task="addTask" />
+    <Login />
     <select v-model="selectedSubject">
       <option value="">All Subjects</option>
       <option
@@ -26,39 +27,46 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watchEffect } from 'vue'
+import { auth, db } from '@/firebase'
+import { collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore'
 import TaskForm from './components/TaskForm.vue'
 import TaskList from './components/TaskList.vue'
+import Login from './components/login.vue'
 import dayjs from 'dayjs'
 
 const tasks = ref([])
-const useFlip = ref(false)
+const user = ref(auth.currentUser)
 
-const loadTasks = () => {
-  const data = localStorage.getItem("tasks")
-  if (data) tasks.value = JSON.parse(data)
+let unsubscribe = null
+const authReady = ref(false)
+
+function loadTasks(uid) {
+  if (!authReady.value || !user.value) return
+  const tasksRef = collection(db, 'users', uid, 'tasks')
+  unsubscribe = onSnapshot(tasksRef, snapshot => {
+    tasks.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+  })
 }
 
-const saveTasks = () => {
-  localStorage.setItem("tasks", JSON.stringify(tasks.value))
+
+async function addTask(task) {
+  if (!authReady.value || !user.value) return
+  const tasksRef = collection(db, 'users', user.value.uid, 'tasks')
+  await addDoc(tasksRef, task)
 }
 
-const addTask = (task) => {
-  tasks.value.push({ id: Date.now(), ...task })
-  saveTasks()
+async function removeTask(id) {
+  if (!authReady.value || !user.value) return
+  const taskRef = doc(db, 'users', user.value.uid, 'tasks', id)
+  await deleteDoc(taskRef)
 }
 
-const removeTask = (id) => {
-  tasks.value = tasks.value.filter(t => t.id !== id)
-  saveTasks()
+async function editTask(id, updates) {
+  if (!authReady.value || !user.value) return
+  const taskRef = doc(db, 'users', user.value.uid, 'tasks', id)
+  await updateDoc(taskRef, updates)
 }
-
-const editTask = (id, newName) => {
-  const t = tasks.value.find(t => t.id === id)
-  if (t) t.name = newName
-  saveTasks()
-}
-
 const toggleView = () => {
   //useFlip.value = !useFlip.value
 }
