@@ -33,13 +33,7 @@ const password = ref('')
 const user = ref(null)
 const authReady = ref(false)
 
-onMounted(() => {
-  // Ensure we wait until the auth state is determined
-  onAuthStateChanged(auth, (u) => {
-    user.value = u
-    authReady.value = true  // Update once auth state is confirmed
-  })
-})
+
 
 const login = async () => {
   await signInWithEmailAndPassword(auth, email.value, password.value)

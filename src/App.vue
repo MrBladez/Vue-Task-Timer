@@ -41,17 +41,36 @@ const user = ref(auth.currentUser)
 let unsubscribe = null
 const authReady = ref(false)
 
-function loadTasks(uid) {
-  if (!authReady.value || !user.value) return
-  const tasksRef = collection(db, 'users', uid, 'tasks')
+onMounted(() => {
+  onAuthStateChanged(auth, (u) => {
+    user.value = u
+    authReady.value = true
+    if (u) loadTasks() // <--- Only call when user is available
+  })
+
+  requestNotificationPermission()
+  startNotificationCheck()
+})
+
+function loadTasks() {
+  if (!user.value) return
+
+  const tasksRef = collection(db, 'users', user.value.uid, 'tasks')
   unsubscribe = onSnapshot(tasksRef, snapshot => {
-    tasks.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    console.log("Loaded tasks for:", user.value.email)
+    console.log("Snapshot size:", snapshot.size)
+
+    tasks.value = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
   })
 }
 
 
 async function addTask(task) {
   if (!authReady.value || !user.value) return
+  console.log('Adding task for user:', user.value?.email, task)
   const tasksRef = collection(db, 'users', user.value.uid, 'tasks')
   await addDoc(tasksRef, task)
 }
@@ -80,13 +99,6 @@ const uniqueSubjects = computed(() => {
 const filteredTasks = computed(() => {
   if (!selectedSubject.value) return tasks.value
   return tasks.value.filter(task => task.subject === selectedSubject.value)
-})
-
-
-onMounted(() => {
-  loadTasks()
-  requestNotificationPermission()
-  startNotificationCheck()
 })
 
 const notifiedTasks = new Set()
