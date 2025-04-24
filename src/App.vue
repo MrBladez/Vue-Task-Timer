@@ -78,7 +78,11 @@ async function addTask(task) {
 async function removeTask(id) {
   if (!authReady.value || !user.value) return
   const taskRef = doc(db, 'users', user.value.uid, 'tasks', id)
-  await deleteDoc(taskRef)
+  try {
+    await addDoc(tasksRef, task)
+  } catch (e) {
+    console.error('Firebase addDoc error:', e)
+  }
 }
 
 async function editTask(id, updates) {
